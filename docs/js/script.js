@@ -24,8 +24,7 @@ function getReceptionPanoramaData() {
       worldSize: new google.maps.Size(2048, 1024),
       centerHeading: 105,
       getTileUrl: function(pano, zoom, tileX, tileY) {
-        return 'https://developers.google.com/maps/documentation/javascript/examples/full/images/' +
-            'panoReception1024-' + zoom + '-' + tileX + '-' + tileY + '.jpg';
+        return `img/image-${zoom}-${tileX}-${tileY}.jpg`;
       }
     }
   };
