@@ -6,24 +6,27 @@ let panorama;
 let outsideGoogle;
 
 // StreetViewPanoramaData for a custom panorama: the Google Sydney reception.
-const getReceptionPanoramaData = _ => ({
+const getReceptionPanoramaData = n => ({
   location: {
-    pano: 'reception',  // The ID for this custom panorama.
-    description: 'Google Sydney - Reception',
-    latLng: new google.maps.LatLng(-33.86684, 151.19583)
+    pano: `pano${n}`,  // The ID for this custom panorama.
+    description: `Panorama ${n}`,
   },
   links: [{
-    heading: 195,
-    description: 'Exit',
-    pano: outsideGoogle.location.pano
+    heading: 0,
+    description: 'Forward',
+    pano: `pano${n + 1}`
+  }, {
+    heading: 180,
+    description: 'Backward',
+    pano: `pano${n - 1}`
   }],
-  copyright: 'Imagery (c) 2010 Google',
+  copyright: 'Imagery (c) 2019 IWABUCHI Yu(u)ki butchi',
   tiles: {
     tileSize: new google.maps.Size(1024, 512),
     worldSize: new google.maps.Size(2048, 1024),
     centerHeading: 105,
     getTileUrl: function(pano, zoom, tileX, tileY) {
-      return `img/image-${zoom}-${tileX}-${tileY}.jpg`;
+      return `img/pano${n % 2}/image-${zoom}-${tileX}-${tileY}.jpg`;
     }
   }
 });
@@ -31,39 +34,20 @@ const getReceptionPanoramaData = _ => ({
 const initPanorama = _ => {
   panorama = new google.maps.StreetViewPanorama(
     document.getElementById('street-view'),
-    {pano: outsideGoogle.location.pano});
+    {pano: 'pano0'});
   // Register a provider for the custom panorama.
-  panorama.registerPanoProvider(function(pano) {
-    if (pano === 'reception') {
-      return getReceptionPanoramaData();
+  panorama.registerPanoProvider(pano => {
+    for (let i = 0; i < 99; i++) {
+      if (pano === `pano${i}`) {
+        return getReceptionPanoramaData(i);
+      }
     }
     return null;
-  });
-
-  // Add a link to our custom panorama from outside the Google Sydney office.
-  panorama.addListener('links_changed', function() {
-    if (panorama.getPano() === outsideGoogle.location.pano) {
-      panorama.getLinks().push({
-        description: 'Google Sydney',
-        heading: 25,
-        pano: 'reception'
-      });
-    }
   });
 }
 
 const initialize = _ => {
-  // Use the Street View service to find a pano ID on Pirrama Rd, outside the
-  // Google office.
-  const streetviewService = new google.maps.StreetViewService;
-  streetviewService.getPanorama(
-    {location: {lat: -33.867386, lng: 151.195767}},
-    (result, status) => {
-      if (status === 'OK') {
-        outsideGoogle = result;
-        initPanorama();
-      }
-    });
+  initPanorama();
 }
 
 window.initialize = initialize;
