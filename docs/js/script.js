@@ -1,39 +1,37 @@
 // source: https://developers.google.com/maps/documentation/javascript/examples/streetview-custom-tiles?hl=ja
 
-var panorama;
+let panorama;
 
 // StreetViewPanoramaData of a panorama just outside the Google Sydney office.
-var outsideGoogle;
+let outsideGoogle;
 
 // StreetViewPanoramaData for a custom panorama: the Google Sydney reception.
-function getReceptionPanoramaData() {
-  return {
-    location: {
-      pano: 'reception',  // The ID for this custom panorama.
-      description: 'Google Sydney - Reception',
-      latLng: new google.maps.LatLng(-33.86684, 151.19583)
-    },
-    links: [{
-      heading: 195,
-      description: 'Exit',
-      pano: outsideGoogle.location.pano
-    }],
-    copyright: 'Imagery (c) 2010 Google',
-    tiles: {
-      tileSize: new google.maps.Size(1024, 512),
-      worldSize: new google.maps.Size(2048, 1024),
-      centerHeading: 105,
-      getTileUrl: function(pano, zoom, tileX, tileY) {
-        return `img/image-${zoom}-${tileX}-${tileY}.jpg`;
-      }
+const getReceptionPanoramaData = _ => ({
+  location: {
+    pano: 'reception',  // The ID for this custom panorama.
+    description: 'Google Sydney - Reception',
+    latLng: new google.maps.LatLng(-33.86684, 151.19583)
+  },
+  links: [{
+    heading: 195,
+    description: 'Exit',
+    pano: outsideGoogle.location.pano
+  }],
+  copyright: 'Imagery (c) 2010 Google',
+  tiles: {
+    tileSize: new google.maps.Size(1024, 512),
+    worldSize: new google.maps.Size(2048, 1024),
+    centerHeading: 105,
+    getTileUrl: function(pano, zoom, tileX, tileY) {
+      return `img/image-${zoom}-${tileX}-${tileY}.jpg`;
     }
-  };
-}
+  }
+});
 
-function initPanorama() {
+const initPanorama = _ => {
   panorama = new google.maps.StreetViewPanorama(
-      document.getElementById('street-view'),
-      {pano: outsideGoogle.location.pano});
+    document.getElementById('street-view'),
+    {pano: outsideGoogle.location.pano});
   // Register a provider for the custom panorama.
   panorama.registerPanoProvider(function(pano) {
     if (pano === 'reception') {
@@ -54,16 +52,18 @@ function initPanorama() {
   });
 }
 
-function initialize() {
+const initialize = _ => {
   // Use the Street View service to find a pano ID on Pirrama Rd, outside the
   // Google office.
-  var streetviewService = new google.maps.StreetViewService;
+  const streetviewService = new google.maps.StreetViewService;
   streetviewService.getPanorama(
-      {location: {lat: -33.867386, lng: 151.195767}},
-      function(result, status) {
-        if (status === 'OK') {
-          outsideGoogle = result;
-          initPanorama();
-        }
-      });
+    {location: {lat: -33.867386, lng: 151.195767}},
+    (result, status) => {
+      if (status === 'OK') {
+        outsideGoogle = result;
+        initPanorama();
+      }
+    });
 }
+
+window.initialize = initialize;
