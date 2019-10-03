@@ -26,7 +26,7 @@ const getReceptionPanoramaData = n => ({
     worldSize: new google.maps.Size(2048, 1024),
     centerHeading: 105,
     getTileUrl: function(pano, zoom, tileX, tileY) {
-      return `img/pano${n % 2}/image-${zoom}-${tileX}-${tileY}.jpg`;
+      return `img/pano${n}/image-${zoom}-${tileX}-${tileY}.jpg`;
     }
   }
 });
