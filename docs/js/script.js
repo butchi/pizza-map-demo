@@ -23,7 +23,7 @@ const getReceptionPanoramaData = n => ({
   copyright: 'Imagery (c) 2019 IWABUCHI Yu(u)ki butchi',
   tiles: {
     tileSize: new google.maps.Size(1024, 512),
-    worldSize: new google.maps.Size(2048, 1024),
+    worldSize: new google.maps.Size(8192, 4096),
     centerHeading: 105,
     getTileUrl: function(pano, zoom, tileX, tileY) {
       return `img/pano${n}/image-${zoom}-${tileX}-${tileY}.jpg`;
